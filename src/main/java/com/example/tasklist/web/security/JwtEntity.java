@@ -1,0 +1,21 @@
+package com.example.tasklist.web.security;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+public class JwtEntity implements UserDetails
+{
+    private Long id;
+    private final String username;
+    private final String name;
+    private final String password;
+    private final Collection<? extends GrantedAuthority> authorities;
+}
