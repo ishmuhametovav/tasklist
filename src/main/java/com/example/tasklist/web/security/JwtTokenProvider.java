@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -42,14 +44,13 @@ public class JwtTokenProvider
 
     public String createAccessToken(Long userId, String username, Set<Role> roles)
     {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtProperties.getAccess());
+        Instant validity = Instant.now()
+                .plus(jwtProperties.getAccess(), ChronoUnit.HOURS);
         return Jwts.builder()
                 .subject(username)
                 .claim("id", userId)
                 .claim("roles", resolveRoles(roles))
-                .issuedAt(now)
-                .expiration(validity)
+                .expiration(Date.from(validity))
                 .signWith(key)
                 .compact();
     }
@@ -61,13 +62,12 @@ public class JwtTokenProvider
 
     public String createRefreshToken(Long userId, String username)
     {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtProperties.getRefresh());
+        Instant validity = Instant.now()
+                .plus(jwtProperties.getRefresh(), ChronoUnit.HOURS);
         return Jwts.builder()
                 .subject(username)
                 .claim("id", userId)
-                .issuedAt(now)
-                .expiration(validity)
+                .expiration(Date.from(validity))
                 .signWith(key)
                 .compact();
     }
