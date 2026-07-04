@@ -50,16 +50,10 @@ public class UserServiceImpl implements UserService
     public User update(User user)
     {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.update(user);
+        userRepository.save(user);
         return user;
     }
 
-    @Override
-    @Transactional
-    @Caching(cacheable = {
-            @Cacheable(value = "UserService::getById", key = "#user.id"),
-            @Cacheable(value = "UserService::getByUsername", key = "#user.username")
-    })
     public User create(User user)
     {
         if(userRepository.findByUsername(user.getUsername()).isPresent())
@@ -71,10 +65,9 @@ public class UserServiceImpl implements UserService
             throw new IllegalStateException("Password and password confirmation do not match");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.create(user);
         Set<Role> roles = Set.of(Role.ROLE_USER);
-        userRepository.insertUserRole(user.getId(), Role.ROLE_USER);
         user.setRoles(roles);
+        userRepository.save(user);
         return user;
     }
 
@@ -91,6 +84,6 @@ public class UserServiceImpl implements UserService
     @CacheEvict(value = "UserService::getById", key = "#id")
     public void delete(Long id)
     {
-        userRepository.delete(id);
+        userRepository.deleteById(id);
     }
 }

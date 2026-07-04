@@ -1,8 +1,10 @@
 package com.example.tasklist.config;
 
+import com.example.tasklist.service.props.MinioProperties;
 import com.example.tasklist.web.security.JwtTokenFilter;
 import com.example.tasklist.web.security.JwtTokenProvider;
 import com.example.tasklist.web.security.expression.CustomSecurityExpressionHandler;
+import io.minio.MinioClient;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -43,6 +45,7 @@ public class ApplicationConfig
 {
     private final JwtTokenProvider tokenProvider;
     private final ApplicationContext applicationContext;
+    private final MinioProperties minioProperties;
 
     @Bean
     public PasswordEncoder passwordEncoder()
@@ -124,6 +127,15 @@ public class ApplicationConfig
                 .entryTtl(Duration.ofMinutes(10));
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(config)
+                .build();
+    }
+
+    @Bean
+    public MinioClient minioClient()
+    {
+        return MinioClient.builder()
+                .endpoint(minioProperties.getUrl())
+                .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
                 .build();
     }
 }
