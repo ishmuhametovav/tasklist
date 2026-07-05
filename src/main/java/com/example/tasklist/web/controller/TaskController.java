@@ -11,6 +11,7 @@ import com.example.tasklist.web.mappers.TaskMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +56,7 @@ public class TaskController
         taskService.delete(id);
     }
 
-    @PostMapping("/{id}/image")
+    @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload image to task")
     @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
     public void uploadImage(@PathVariable Long id,

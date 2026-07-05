@@ -23,7 +23,6 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService
 {
     private final TaskRepository taskRepository;
-    private final UserService userService;
     private final ImageService imageService;
 
     @Override
@@ -57,12 +56,16 @@ public class TaskServiceImpl implements TaskService
 
     @Override
     @Transactional
+    @Cacheable(
+            value = "TaskService::getById",
+            condition = "#task.id!=null",
+            key = "#task.id"
+    )
     public Task create(Task task, Long userId)
     {
-        User user = userService.getById(userId);
         task.setStatus(Status.TODO);
-        user.getTasks().add(task);
-        userService.update(user);
+        task = taskRepository.save(task);
+        taskRepository.assignTask(userId, task.getId());
         return task;
     }
 

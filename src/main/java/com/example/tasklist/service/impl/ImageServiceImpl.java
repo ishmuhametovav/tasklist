@@ -32,7 +32,7 @@ public class ImageServiceImpl implements ImageService
             createBucket();
         } catch (Exception e)
         {
-            throw new ImageUploadException("Image upload failed" + e.getMessage());
+            throw new ImageUploadException("Image upload failed " + e.getMessage());
         }
 
         MultipartFile file = image.getFile();
@@ -48,7 +48,7 @@ public class ImageServiceImpl implements ImageService
             inputStream = file.getInputStream();
         } catch (Exception e)
         {
-            throw new ImageUploadException("Image upload failed" + e.getMessage());
+            throw new ImageUploadException("Image upload failed " + e.getMessage());
         }
         saveImage(inputStream, filename);
         return filename;
