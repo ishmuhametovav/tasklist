@@ -11,8 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Data
-public class User implements Serializable
-{
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,8 +31,8 @@ public class User implements Serializable
 
     @OneToMany
     @JoinTable(name = "users_tasks"
-            ,joinColumns = @JoinColumn(name = "user_id")
-            ,inverseJoinColumns = @JoinColumn(name = "task_id")
+            , joinColumns = @JoinColumn(name = "user_id")
+            , inverseJoinColumns = @JoinColumn(name = "task_id")
     )
     private List<Task> tasks;
 }

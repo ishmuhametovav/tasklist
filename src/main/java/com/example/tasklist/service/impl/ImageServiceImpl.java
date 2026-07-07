@@ -19,35 +19,28 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ImageServiceImpl implements ImageService
-{
+public class ImageServiceImpl implements ImageService {
     private final MinioClient minioClient;
     private final MinioProperties minioProperties;
 
     @Override
-    public String upload(TaskImage image)
-    {
-        try
-        {
+    public String upload(TaskImage image) {
+        try {
             createBucket();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new ImageUploadException("Image upload failed " + e.getMessage());
         }
 
         MultipartFile file = image.getFile();
-        if (file.isEmpty() || file.getOriginalFilename() == null)
-        {
+        if (file.isEmpty() || file.getOriginalFilename() == null) {
             throw new ImageUploadException("Image must have a name");
         }
 
         String filename = generateFileName(file);
         InputStream inputStream;
-        try
-        {
+        try {
             inputStream = file.getInputStream();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new ImageUploadException("Image upload failed " + e.getMessage());
         }
         saveImage(inputStream, filename);
@@ -55,35 +48,30 @@ public class ImageServiceImpl implements ImageService
     }
 
     @SneakyThrows
-    private void createBucket()
-    {
+    private void createBucket() {
         boolean found = minioClient.bucketExists(BucketExistsArgs.builder()
                 .bucket(minioProperties.getBucket())
                 .build());
 
-        if (!found)
-        {
+        if (!found) {
             minioClient.makeBucket(MakeBucketArgs.builder()
                     .bucket(minioProperties.getBucket())
                     .build());
         }
     }
 
-    private String generateFileName(MultipartFile file)
-    {
+    private String generateFileName(MultipartFile file) {
         String extension = getExtension(file);
         return UUID.randomUUID() + "." + extension;
     }
 
-    private String getExtension(MultipartFile file)
-    {
+    private String getExtension(MultipartFile file) {
         return Objects.requireNonNull(file.getOriginalFilename())
                 .substring(file.getOriginalFilename().lastIndexOf(".") + 1);
     }
 
     @SneakyThrows
-    private void saveImage(InputStream inputStream, String filename)
-    {
+    private void saveImage(InputStream inputStream, String filename) {
         minioClient.putObject(PutObjectArgs.builder()
                 .stream(inputStream, (long) inputStream.available(), (long) -1)
                 .bucket(minioProperties.getBucket())

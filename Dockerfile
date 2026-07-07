@@ -2,6 +2,7 @@ FROM maven:3.9.16-amazoncorretto-17-alpine AS build
 WORKDIR /
 COPY /src /src
 COPY pom.xml /
+COPY checkstyle-suppressions.xml /
 RUN mvn -f /pom.xml clean package
 
 FROM amazoncorretto:17-alpine
