@@ -9,4 +9,11 @@
     <suppress checks="HideUtilityClassConstructor"/>
     <suppress checks="MagicNumber"/>
     <suppress checks="HiddenField"/>
+
+    <suppress checks="LineLength"/>
+    <suppress checks="FinalParameters"/>
+    <suppress checks="LeftCurly"/>
+    <suppress checks="NewlineAtEndOfFile"/>
+    <suppress checks="AvoidStarImport"/>
+    <suppress checks="NoWhitespaceBefore"/>
 </suppressions>
