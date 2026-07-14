@@ -22,9 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -41,35 +39,30 @@ import java.time.Duration;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class ApplicationConfig
-{
+public class ApplicationConfig {
     private final JwtTokenProvider tokenProvider;
     private final ApplicationContext applicationContext;
     private final MinioProperties minioProperties;
 
     @Bean
-    public PasswordEncoder passwordEncoder()
-    {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception
-    {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public MethodSecurityExpressionHandler expressionHandler()
-    {
+    public MethodSecurityExpressionHandler expressionHandler() {
         DefaultMethodSecurityExpressionHandler expressionHandler = new CustomSecurityExpressionHandler();
         expressionHandler.setApplicationContext(applicationContext);
         return expressionHandler;
     }
 
     @Bean
-    public OpenAPI openAPI()
-    {
+    public OpenAPI openAPI() {
         return new OpenAPI()
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(
@@ -89,8 +82,7 @@ public class ApplicationConfig
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception
-    {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
@@ -120,9 +112,9 @@ public class ApplicationConfig
                 .addFilterBefore(new JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
+
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory)
-    {
+    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(10));
         return RedisCacheManager.builder(connectionFactory)
@@ -131,8 +123,7 @@ public class ApplicationConfig
     }
 
     @Bean
-    public MinioClient minioClient()
-    {
+    public MinioClient minioClient() {
         return MinioClient.builder()
                 .endpoint(minioProperties.getUrl())
                 .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())

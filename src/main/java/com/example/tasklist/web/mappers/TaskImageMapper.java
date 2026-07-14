@@ -5,6 +5,5 @@ import com.example.tasklist.web.dto.task.TaskImageDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface TaskImageMapper extends Mappable<TaskImageDto, TaskImage>
-{
+public interface TaskImageMapper extends Mappable<TaskImageDto, TaskImage> {
 }

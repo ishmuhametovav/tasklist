@@ -10,15 +10,13 @@ import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
 
-public class CustomSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler
-{
+public class CustomSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
     private ApplicationContext applicationContext;
 
     private final AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
 
     @Override
-    protected MethodSecurityExpressionOperations createSecurityExpressionRoot(@Nullable Authentication authentication, MethodInvocation invocation)
-    {
+    protected MethodSecurityExpressionOperations createSecurityExpressionRoot(@Nullable Authentication authentication, MethodInvocation invocation) {
         CustomMethodSecurityExpressionRoot root = new CustomMethodSecurityExpressionRoot(authentication);
         root.setTrustResolver(trustResolver);
         root.setPermissionEvaluator(getPermissionEvaluator());
@@ -28,8 +26,7 @@ public class CustomSecurityExpressionHandler extends DefaultMethodSecurityExpres
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext)
-    {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         super.setApplicationContext(applicationContext);
         this.applicationContext = applicationContext;
     }

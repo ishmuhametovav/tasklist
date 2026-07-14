@@ -6,8 +6,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class TaskImageDto
-{
+public class TaskImageDto {
     @NotNull(message = "Image must be not null")
     @Schema(type = "string", format = "binary", description = "Image file")
     private MultipartFile file;

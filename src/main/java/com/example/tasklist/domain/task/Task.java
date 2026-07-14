@@ -10,8 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "tasks")
 @Data
-public class Task implements Serializable
-{
+public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

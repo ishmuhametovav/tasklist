@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class TaskDto
-{
+public class TaskDto {
     @NotNull(message = "Id must be not null", groups = {OnUpdate.class})
     private Long id;
 
